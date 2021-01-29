@@ -1,7 +1,6 @@
-
 from dataclasses import dataclass
 from datetime import datetime
-from .utils import parse_date
+from emailnetwork.utils import parse_date
 
 @dataclass
 class EmailMeta:
@@ -65,3 +64,7 @@ class EmailAddress:
     def domain(self):
         return self.email.split('@')[-1] or None
 
+@dataclass
+class EmailBody:
+    subject: str = None
+    body: str = None

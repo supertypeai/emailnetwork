@@ -1,11 +1,11 @@
 from email.utils import getaddresses
 from mailbox import mbox
 
-from emailnetwork.emails import EmailAddress, EmailMeta
-# try:
-#     from .emails import EmailAddress, EmailMeta
-# except:
-#     from emailnetwork.emails import EmailAddress, EmailMeta
+from mailbox import mboxMessage
+
+
+from emailnetwork.utils import clean_subject, clean_body
+from emailnetwork.emails import EmailAddress, EmailMeta, EmailBody
 
 def extract_meta(email):
 
@@ -16,8 +16,15 @@ def extract_meta(email):
         sender=EmailAddress(getaddresses(email.get_all('From'))[0]),
         recipients=[EmailAddress(rec) for rec in getaddresses(recs)],
         cc=[EmailAddress(cc) for cc in getaddresses(ccs)],
-        subject=email.get('Subject', '').strip() or None,
+        subject=clean_subject(email['Subject']) or None,
         date=email['Date']
+    )
+
+def extract_body(email):
+
+    return EmailBody(
+        subject = clean_subject(email['Subject']) or None,
+        body = clean_body(email)
     )
 
 class MBoxReader(object):
@@ -89,11 +96,18 @@ class MBoxReader(object):
 
 if __name__ == '__main__':
     # reader = MBoxReader('/Users/samuel/Footprints/samuel-supertype.mbox')
-    reader = MBoxReader('/Users/samuel/Footprints/emailnetwork/emailnetwork/tests/test.mbox')
+    import os
+    MBOX_PATH = f'{os.path.dirname(__file__)}/tests/test.mbox'
+    reader = MBoxReader(MBOX_PATH)
     print(f'{len(reader)} emails in the sample mbox.')
     # email = reader.mbox[646]
     email = reader.mbox[0]
     emailmsg = extract_meta(email)
+    # print(reader)
+    # print(type(email))
+    # print(email.is_multipart())
+    emailbody = extract_body(email)
+    print(mboxMessage(email._payload[0]).keys())
     
     thisyearmails = reader.filter_by_date(">=", "2021-01-05")
     # print(emailmsg.recipients)

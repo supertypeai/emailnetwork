@@ -27,6 +27,14 @@ If you're a graph theorist and looking for something more statistical:
 * Only dependencies are NetworkX and Matplotlib
 
 ## Example Usage
+To install `emailnetwork`:
+```
+pip install emailnetwork
+```
+
+A sample `.mbox` file is provided to you, but you can obtain export your own mailbox from your email service provider. If you use Google (Gmail), you can [use the Google Takeout service](https://takeout.google.com/settings/takeout) to export your mail data.
+
+
 ```python
 reader = MBoxReader('path-to-mbox.mbox')
 print(f'{len(reader)} emails in the sample mbox.')
@@ -77,7 +85,27 @@ Examples of features that were used extensively in the creation of this package:
 * [Typing (Type hints), new in Python 3.5](https://docs.python.org/3/library/typing.html)
 * [Formatted string literal, new in Python 3.6](https://docs.python.org/3/reference/lexical_analysis.html#f-strings)
 ## Testing
-Git clone, and run `nosetests`. 
+Git clone, and run `nosetests`. You can also run nosetests with coverage:
+```
+nosetests --with-coverage --cover-package=emailnetwork
+
+.........
+Name                       Stmts   Miss  Cover
+----------------------------------------------
+emailnetwork/__init__.py       2      0   100%
+emailnetwork/emails.py        55     11    80%
+emailnetwork/extract.py       54     11    80%
+emailnetwork/graph.py        120     82    32%
+emailnetwork/network.py       13      7    46%
+emailnetwork/utils.py         32     17    47%
+emailnetwork/version.py        1      0   100%
+----------------------------------------------
+TOTAL                        277    128    54%
+----------------------------------------------------------------------
+Ran 9 tests in 3.226s
+
+OK
+```
 
 All tests are located in the `/tests/` directory.
 
