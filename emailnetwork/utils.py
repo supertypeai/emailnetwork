@@ -5,7 +5,8 @@ from dateutil.tz import tzlocal, tzutc
 from email.utils import parsedate_tz, mktime_tz
 from email.header import decode_header
 
-def parse_date(datestring:str):
+
+def parse_date(datestring: str):
     """[summary]
     Usage:
         Primarily used for extract_meta(email): parse_date(email['Date'])
@@ -22,21 +23,23 @@ def parse_date(datestring:str):
     except Exception:
         return None
 
+
 def clean_subject(subject):
     """[summary]
     Usage:
-        
+
     Args:
         subject (byte or str)
     """
     subject, encoding = decode_header(subject)[0]
     if isinstance(subject, bytes):
         try:
-            return subject.decode(encoding)
+            return subject.decode(encoding).strip()
         except:
-            return subject.decode('utf-8')
+            return subject.decode('utf-8').strip()
     else:
-        return subject
+        return subject.strip().replace('\r\n', '')
+
 
 def clean_body(email):
     if email.is_multipart():
@@ -46,7 +49,7 @@ def clean_body(email):
 
             # skip any text/plain (txt) attachments
             if ctype == 'text/plain' and 'attachment' not in cdispo:
-                return part.get_payload(decode=True).decode() # decode
+                return part.get_payload(decode=True).decode()  # decode
                 break
     # not multipart - i.e. plain text, no attachments, keeping fingers crossed
     else:
